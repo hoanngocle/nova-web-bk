@@ -33,8 +33,15 @@
   "npm.packageManager": "yarn",
   // Extension: cSpell
   "cSpell.words": [
-    "Customizer"
+    "Customizer",
+    "iconify",
+    "npmrc",
+    "nprogress",
+    "prismjs",
+    "tabler"
   ],
   "search-node-modules.path": "node_modules",
-  "markdown.extension.toc.updateOnSave": false
+  "markdown.extension.toc.updateOnSave": false,
+"prettier.tabWidth": 4,
+"editor.detectIndentation": false
 }
