@@ -1,23 +1,20 @@
 import { getAxiosClient } from '.';
 
-export const authenticate = (email: string, password: string) => {
+const login = (email: string, password: string, rememberMe?: boolean) => {
     const restClient = getAxiosClient();
+    console.log(restClient.post('/login', { email, password, rememberMe }));
 
-    return restClient.post('/login', { email, password });
+    return restClient.post('/login', { email, password, rememberMe });
 };
 
-class AuthService {
-    login(email: string, password: string) {
-        const restClient = getAxiosClient();
+const register = (email: string, password: string) => {
+    const restClient = getAxiosClient();
 
-        return restClient.post('/login', { email, password });
-    }
+    return restClient.post('/register', { email, password });
+};
 
-    register(email: string, password: string) {
-        const restClient = getAxiosClient();
-
-        return restClient.post('/register', { email, password });
-    }
-}
-
+const AuthService = {
+    register,
+    login
+};
 export default AuthService;

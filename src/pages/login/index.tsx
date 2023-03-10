@@ -83,12 +83,12 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 
 const schema = yup.object().shape({
     email: yup.string().email().required(),
-    password: yup.string().min(8).required()
+    password: yup.string().min(5).required()
 });
 
 const defaultValues = {
-    password: 'admin',
-    email: 'admin@vuexy.com'
+    email: 'admin@nova.com',
+    password: 'admin'
 };
 
 interface FormData {
@@ -118,6 +118,8 @@ const LoginPage = () => {
 
     const onSubmit = (data: FormData) => {
         const { email, password } = data;
+        console.log(data);
+
         auth.login({ email, password, rememberMe }, () => {
             setError('email', {
                 type: 'manual',

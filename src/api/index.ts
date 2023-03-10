@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import { isDevMode } from 'src/@core/utils/helper';
 
-const BASE_API_URL = process.env.NEXT_API_URL;
+const BASE_API_URL = process.env.NEXT_API_URL ?? 'https://dummyjson.com/auth';
 
 /**
  * Call axios.create without token on the header
