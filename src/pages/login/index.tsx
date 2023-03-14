@@ -118,7 +118,6 @@ const LoginPage = () => {
 
     const onSubmit = (data: FormData) => {
         const { email, password } = data;
-        console.log(data);
 
         auth.login({ email, password, rememberMe }, () => {
             setError('email', {

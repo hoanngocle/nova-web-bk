@@ -1,8 +1,7 @@
-import { getAxiosClient } from '.';
+import { getAxiosClient, getAxiosClientWithToken } from '.';
 
 const login = (email: string, password: string, rememberMe?: boolean) => {
-    const restClient = getAxiosClient();
-    console.log(restClient.post('/login', { email, password, rememberMe }));
+    const restClient = getAxiosClientWithToken();
 
     return restClient.post('/login', { email, password, rememberMe });
 };

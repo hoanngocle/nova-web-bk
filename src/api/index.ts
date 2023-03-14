@@ -1,14 +1,14 @@
 import axios, { AxiosError } from 'axios';
 import { isDevMode } from 'src/@core/utils/helper';
 
-const BASE_API_URL = process.env.NEXT_API_URL ?? 'https://dummyjson.com/auth';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 /**
  * Call axios.create without token on the header
  **/
 export const getAxiosClient = () => {
     return axios.create({
-        baseURL: BASE_API_URL
+        baseURL: BASE_URL
     });
 };
 
