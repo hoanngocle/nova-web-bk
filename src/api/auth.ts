@@ -1,15 +1,16 @@
+import { LoginParams, RegisterParams } from 'src/types';
 import { getAxiosClient, getAxiosClientWithToken } from '.';
 
-const login = (email: string, password: string, rememberMe?: boolean) => {
+const login = (params: LoginParams) => {
     const restClient = getAxiosClientWithToken();
 
-    return restClient.post('/login', { email, password, rememberMe });
+    return restClient.post('/login', params);
 };
 
-const register = (email: string, password: string) => {
+const register = (params: RegisterParams) => {
     const restClient = getAxiosClient();
 
-    return restClient.post('/register', { email, password });
+    return restClient.post('/register', params);
 };
 
 const AuthService = {

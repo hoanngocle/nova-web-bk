@@ -9,10 +9,10 @@ import axios from 'axios';
 
 // ** Config
 import authConfig from 'src/configs/auth';
+import AuthService from 'src/api/auth';
 
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types';
-import AuthService from 'src/api/auth';
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -77,22 +77,19 @@ const AuthProvider = ({ children }: Props) => {
     const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
         AuthService.login(params.email, params.password, params.rememberMe)
             .then(async response => {
-                console.log(response.data.accessToken);
                 console.log(response.data);
 
-                // params.rememberMe
-                //     ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
-                //     : null;
-                // const returnUrl = router.query.returnUrl;
+                params.rememberMe
+                    ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.token)
+                    : null;
+                const returnUrl = router.query.returnUrl;
 
-                // setUser({ ...response.data.userData });
-                // params.rememberMe
-                //     ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
-                //     : null;
+                setUser({ ...response.data.user });
+                params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.user)) : null;
 
-                // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/';
+                const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/';
 
-                // router.replace(redirectURL as string);
+                router.replace(redirectURL as string);
             })
 
             .catch(err => {
