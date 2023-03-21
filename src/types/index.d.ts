@@ -1,10 +1,10 @@
 export type LoginParams = {
     email: string;
     password: string;
-    rememberMe: boolean;
 };
 
 export type RegisterParams = {
+    username: string;
     email: string;
     password: string;
 };

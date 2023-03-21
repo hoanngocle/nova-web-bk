@@ -30,7 +30,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // ** Hooks
-import { useAuth } from 'src/hooks/useAuth';
+import { handleLogin } from 'src/redux/auth';
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig';
@@ -40,6 +40,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout';
 
 // ** Demo Imports
 import FooterImage from 'src/views/pages/auth/FooterImage';
+import { useAppDispatch } from 'src/redux/hooks';
+import { LoginParams } from 'src/types';
 
 // ** Styled Components
 const LoginImage = styled('img')(({ theme }) => ({
@@ -91,23 +93,18 @@ const defaultValues = {
     password: 'admin'
 };
 
-interface FormData {
-    email: string;
-    password: string;
-}
-
 const LoginPage = () => {
     const [rememberMe, setRememberMe] = useState<boolean>(true);
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     // ** Hooks
-    const auth = useAuth();
+    const dispatch = useAppDispatch();
     const theme = useTheme();
     const hidden = useMediaQuery(theme.breakpoints.down('md'));
+    const imageSource = 'auth-v2-login-illustration';
 
     const {
         control,
-        setError,
         handleSubmit,
         formState: { errors }
     } = useForm({
@@ -116,18 +113,9 @@ const LoginPage = () => {
         resolver: yupResolver(schema)
     });
 
-    const onSubmit = (data: FormData) => {
-        const { email, password } = data;
-
-        auth.login({ email, password, rememberMe }, () => {
-            setError('email', {
-                type: 'manual',
-                message: 'Email or Password is invalid'
-            });
-        });
+    const onSubmit = (params: LoginParams) => {
+        dispatch(handleLogin(params));
     };
-
-    const imageSource = 'auth-v2-login-illustration';
 
     return (
         <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
