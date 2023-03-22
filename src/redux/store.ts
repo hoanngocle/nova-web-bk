@@ -1,7 +1,7 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 
 // Import slide
-import { authSlice } from './auth';
+import { authSlice } from './slice/authSlice';
 
 export const store = configureStore({
     reducer: {

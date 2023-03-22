@@ -2,21 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { getErrorMessage } from 'src/api';
 import AuthService from 'src/api/auth';
 import { LoginParams } from 'src/types';
+import { RootState } from '../store';
 
 export type AuthState = {
     token: string;
-    isLoading: boolean;
-    errorMessage: string;
-    currentUser: string;
+    loading: boolean;
+    success: boolean;
+    message: string;
+    currentUser: string | null;
 };
 
 export const handleLogin = createAsyncThunk('api/login', async (params: LoginParams, { dispatch, rejectWithValue }) => {
     try {
-        console.log(params);
-
         const response = await AuthService.login(params);
-        console.log(response);
-
         const { success } = response.data;
 
         if (success) {
@@ -35,30 +33,33 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState: {
         token: '',
-        isLoading: false,
-        errorMessage: '',
+        loading: false,
+        success: false,
+        message: '',
         currentUser: ''
     } as AuthState,
 
     // Sync action
     reducers: {
         setAuth: (state: AuthState, action) => {
-            const { token, email } = action.payload;
-            console.log(action.payload);
-            action.payload;
-
-            state.token = email;
-
-            if (token) {
-                state.token = token;
-            }
+            const { success, token, user } = action.payload;
+            state.success = success;
+            state.token = token;
+            state.currentUser = user;
         },
         logout: (state: AuthState) => {
+            state.success = false;
             state.token = '';
-            state.isLoading = false;
-            state.errorMessage = '';
-            state.currentUser = 'null';
+            state.message = '';
+            state.currentUser = null;
+        },
+        resetLoginState: (state: AuthState) => {
+            state.success = false;
+            state.token = '';
+            state.message = '';
         }
+
+        
     },
 
     // Async action
@@ -67,30 +68,29 @@ export const authSlice = createSlice({
 
             // Start login request
             .addCase(handleLogin.pending, state => {
-                state.isLoading = true;
+                state.loading = true;
             })
 
             // Request successful
-            .addCase(handleLogin.fulfilled, (state, action) => {
-                state.isLoading = false;
-
-                // state.currentUser = action.payload;
+            .addCase(handleLogin.fulfilled, state => {
+                state.loading = false;
+                state.success = true;
             })
 
             // Request error
-            .addCase(handleLogin.rejected, (state, action) => {
-                state.isLoading = false;
-
-                // state.errorMessage = action.payload.message;
+            .addCase(handleLogin.rejected, state => {
+                state.loading = false;
+                state.success = false;
             });
     }
 });
 
 // Export actions
-export const { logout, setAuth } = authSlice.actions;
+export const { setAuth, logout, resetLoginState } = authSlice.actions;
 
 // Select state currentUser from slice
-// export const selectUser = (state) => state.user.currentUser;
+export const authSelector = (state: RootState) => state.auth;
+
 // export const selectLoading = (state) => state.user.isLoading;
 // export const selectErrorMessage = (state) => state.user.errorMessage;
 

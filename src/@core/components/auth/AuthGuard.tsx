@@ -1,48 +1,55 @@
 // ** React Imports
-import { ReactNode, ReactElement, useEffect } from 'react'
+import { ReactNode, ReactElement, useEffect } from 'react';
 
 // ** Next Import
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 
 // ** Hooks Import
-import { useAuth } from 'src/hooks/useAuth'
+import { useAuth } from 'src/hooks/useAuth';
+import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
+import { authSelector } from 'src/redux/slice/authSlice';
 
 interface AuthGuardProps {
-  children: ReactNode
-  fallback: ReactElement | null
+    children: ReactNode;
+    fallback: ReactElement | null;
 }
 
 const AuthGuard = (props: AuthGuardProps) => {
-  const { children, fallback } = props
-  const auth = useAuth()
-  const router = useRouter()
+    const { children, fallback } = props;
+    const auth = useAuth();
+    const router = useRouter();
+    const { token, currentUser } = useAppSelector(authSelector);
 
-  useEffect(
-    () => {
-      if (!router.isReady) {
-        return
-      }
+    useEffect(
+        () => {
+            if (!router.isReady) {
+                return;
+            }
 
-      if (auth.user === null && !window.localStorage.getItem('userData')) {
-        if (router.asPath !== '/') {
-          router.replace({
-            pathname: '/login',
-            query: { returnUrl: router.asPath }
-          })
-        } else {
-          router.replace('/login')
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.route]
-  )
+            console.log('AuthGuard');
+            console.log(currentUser);
+            console.log(token);
 
-  if (auth.loading || auth.user === null) {
-    return fallback
-  }
+            // if (auth.user === null && !window.localStorage.getItem('userData')) {
+            //     if (router.asPath !== '/') {
+            //         router.replace({
+            //             pathname: '/login',
+            //             query: { returnUrl: router.asPath }
+            //         });
+            //     } else {
+            //         router.replace('/login');
+            //     }
+            // }
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [router.route]
+    );
 
-  return <>{children}</>
-}
+    if (auth.loading || auth.user === null) {
+        return fallback;
+    }
 
-export default AuthGuard
+    return <>{children}</>;
+};
+
+export default AuthGuard;

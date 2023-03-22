@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent } from 'react';
+import { useState, ReactNode, MouseEvent, useEffect } from 'react';
 
 // ** Next Imports
 import Link from 'next/link';
@@ -28,9 +28,10 @@ import Icon from 'src/@core/components/icon';
 import * as yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter } from 'next/router';
 
 // ** Hooks
-import { handleLogin } from 'src/redux/auth';
+import { handleLogin, resetLoginState, authSelector } from 'src/redux/slice/authSlice';
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig';
@@ -40,7 +41,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout';
 
 // ** Demo Imports
 import FooterImage from 'src/views/pages/auth/FooterImage';
-import { useAppDispatch } from 'src/redux/hooks';
+import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import { LoginParams } from 'src/types';
 
 // ** Styled Components
@@ -99,6 +100,8 @@ const LoginPage = () => {
 
     // ** Hooks
     const dispatch = useAppDispatch();
+    const router = useRouter();
+    const { isLoading, success, message, currentUser } = useAppSelector(authSelector);
     const theme = useTheme();
     const hidden = useMediaQuery(theme.breakpoints.down('md'));
     const imageSource = 'auth-v2-login-illustration';
@@ -116,6 +119,14 @@ const LoginPage = () => {
     const onSubmit = (params: LoginParams) => {
         dispatch(handleLogin(params));
     };
+
+    useEffect(() => {
+        console.log(success);
+        if (success) {
+            dispatch(resetLoginState());
+            router.replace('/');
+        }
+    }, [success, router, dispatch]);
 
     return (
         <Box className='content-right' sx={{ backgroundColor: 'background.paper' }}>
