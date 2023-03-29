@@ -33,7 +33,6 @@ import { useForm, Controller } from 'react-hook-form';
 import BlankLayout from 'src/@core/layouts/BlankLayout';
 
 // ** Hooks
-import { useAuth } from 'src/hooks/useAuth';
 import { useSettings } from 'src/@core/hooks/useSettings';
 
 // ** Demo Imports
@@ -100,7 +99,6 @@ const Register = () => {
 
     // ** Hooks
     const theme = useTheme();
-    const { register } = useAuth();
     const { settings } = useSettings();
     const hidden = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -126,20 +124,6 @@ const Register = () => {
 
     const onSubmit = (data: FormData) => {
         const { email, username, password } = data;
-        register({ email, username, password }, err => {
-            if (err.email) {
-                setError('email', {
-                    type: 'manual',
-                    message: err.email
-                });
-            }
-            if (err.username) {
-                setError('username', {
-                    type: 'manual',
-                    message: err.username
-                });
-            }
-        });
     };
 
     const imageSource =

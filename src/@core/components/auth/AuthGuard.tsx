@@ -5,7 +5,6 @@ import { ReactNode, ReactElement, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 // ** Hooks Import
-import { useAuth } from 'src/hooks/useAuth';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import { authSelector } from 'src/redux/slice/authSlice';
 
@@ -16,9 +15,8 @@ interface AuthGuardProps {
 
 const AuthGuard = (props: AuthGuardProps) => {
     const { children, fallback } = props;
-    const auth = useAuth();
     const router = useRouter();
-    const { token, currentUser } = useAppSelector(authSelector);
+    const { loading, token, currentUser } = useAppSelector(authSelector);
 
     useEffect(
         () => {
@@ -26,26 +24,22 @@ const AuthGuard = (props: AuthGuardProps) => {
                 return;
             }
 
-            console.log('AuthGuard');
-            console.log(currentUser);
-            console.log(token);
-
-            // if (auth.user === null && !window.localStorage.getItem('userData')) {
-            //     if (router.asPath !== '/') {
-            //         router.replace({
-            //             pathname: '/login',
-            //             query: { returnUrl: router.asPath }
-            //         });
-            //     } else {
-            //         router.replace('/login');
-            //     }
-            // }
+            if (currentUser === null) {
+                if (router.asPath !== '/') {
+                    router.replace({
+                        pathname: '/login',
+                        query: { returnUrl: router.asPath }
+                    });
+                } else {
+                    router.replace('/login');
+                }
+            }
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [router.route]
     );
 
-    if (auth.loading || auth.user === null) {
+    if (loading || currentUser === null) {
         return fallback;
     }
 

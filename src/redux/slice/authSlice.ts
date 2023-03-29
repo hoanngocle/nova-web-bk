@@ -9,7 +9,7 @@ export type AuthState = {
     loading: boolean;
     success: boolean;
     message: string;
-    currentUser: string | null;
+    user: string | null;
 };
 
 export const handleLogin = createAsyncThunk('api/login', async (params: LoginParams, { dispatch, rejectWithValue }) => {
@@ -36,7 +36,7 @@ export const authSlice = createSlice({
         loading: false,
         success: false,
         message: '',
-        currentUser: ''
+        user: null
     } as AuthState,
 
     // Sync action
@@ -45,21 +45,16 @@ export const authSlice = createSlice({
             const { success, token, user } = action.payload;
             state.success = success;
             state.token = token;
-            state.currentUser = user;
+            state.user = user;
         },
         logout: (state: AuthState) => {
-            state.success = false;
             state.token = '';
-            state.message = '';
-            state.currentUser = null;
+            state.user = null;
         },
         resetLoginState: (state: AuthState) => {
-            state.success = false;
             state.token = '';
             state.message = '';
         }
-
-        
     },
 
     // Async action
@@ -88,10 +83,7 @@ export const authSlice = createSlice({
 // Export actions
 export const { setAuth, logout, resetLoginState } = authSlice.actions;
 
-// Select state currentUser from slice
+// Select state user from slice
 export const authSelector = (state: RootState) => state.auth;
-
-// export const selectLoading = (state) => state.user.isLoading;
-// export const selectErrorMessage = (state) => state.user.errorMessage;
 
 export default authSlice.reducer;

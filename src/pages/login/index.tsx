@@ -99,9 +99,9 @@ const LoginPage = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     // ** Hooks
-    const dispatch = useAppDispatch();
     const router = useRouter();
-    const { isLoading, success, message, currentUser } = useAppSelector(authSelector);
+    const { success } = useAppSelector(authSelector);
+    const dispatch = useAppDispatch();
     const theme = useTheme();
     const hidden = useMediaQuery(theme.breakpoints.down('md'));
     const imageSource = 'auth-v2-login-illustration';
@@ -122,6 +122,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         console.log(success);
+
         if (success) {
             dispatch(resetLoginState());
             router.replace('/');
